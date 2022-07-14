@@ -8,7 +8,7 @@ import (
 
 	"github.com/cosmos/go-bip39"
 	cfg "github.com/tendermint/tendermint/config"
-	tmed25519 "github.com/tendermint/tendermint/crypto/ed25519"
+	tmbls "github.com/tendermint/tendermint/crypto/bls"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	"github.com/tendermint/tendermint/p2p"
 	"github.com/tendermint/tendermint/privval"
@@ -82,7 +82,7 @@ func InitializeNodeValidatorFilesFromMnemonic(config *cfg.Config, mnemonic strin
 	if len(mnemonic) == 0 {
 		filePV = privval.LoadOrGenFilePV(pvKeyFile, pvStateFile)
 	} else {
-		privKey := tmed25519.GenPrivKeyFromSecret([]byte(mnemonic))
+		privKey := tmbls.GenPrivKey()
 		filePV = privval.NewFilePV(privKey, pvKeyFile, pvStateFile)
 	}
 

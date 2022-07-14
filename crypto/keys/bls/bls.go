@@ -37,6 +37,19 @@ func init() {
 var _ cryptotypes.PrivKey = &PrivKey{}
 var _ codec.AminoMarshaler = &PrivKey{}
 
+// GenPrivKey generates a new BLS12-381 private key.
+func GenPrivKey() *PrivKey {
+	sigKey := bls.SecretKey{}
+	sigKey.SetByCSPRNG()
+	sigKeyBytes := make([]byte, PrivKeySize)
+	binary := sigKey.Serialize()
+	if len(binary) != PrivKeySize {
+		panic(fmt.Sprintf("unexpected BLS private key size: %d != %d", len(binary), PrivKeySize))
+	}
+	copy(sigKeyBytes[:], binary)
+	return &PrivKey{Key: sigKeyBytes}
+}
+
 // Bytes marshals the privkey using amino encoding.
 func (privKey PrivKey) Bytes() []byte {
 	return privKey.Key
